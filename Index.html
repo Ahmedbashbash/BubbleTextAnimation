@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Bubble Text Animation</title>
+  </head>
+  <style>
+    * {
+      padding: 0;
+      margin:0;
+      box-sizing: border-box;
+      font-family: system-ui;
+
+      transition: all;
+      transition-duration: 0.35s;
+    }
+    body{
+      background: #010104;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    h1{
+      font-size: 90px;
+      color: #b3b3fe;
+      font-weight: 100;
+
+      cursor: default;
+    }
+    .hovered {
+      color: #fbfbfb;
+      font-weight: 900;
+    }
+    .hovered-adjacent {
+      color: #ccccfa;
+      font-weight: 400;
+    }
+  </style>
+  <body>
+    <h1 id="bubble-hover"></h1>
+
+    <script>
+      const phrase = "@Ahmedbashbash"
+      const targetEl = document.getElementById("bubble-hover")
+
+      phrase.split("").map((char, idx) => {
+        const el = document.createElement("span");
+
+        el.innerText = char;
+        el.setAttribute("data-index", idx.toString());
+        el.classList.add("hover-char");
+
+        targetEl.appendChild(el);
+      });
+
+      const hoverChars = [...document.getElementsByClassName("hover-char")];
+      const removeClasses = () => {
+        hoverChars.map((char) => {
+          char.classList.remove("hovered");
+          char.classList.remove("hovered-adjacent");
+        });
+      };
+
+      hoverChars.map((char) => {
+        char.addEventListener("mouseover", (e) => {
+          removeClasses();
+
+          const currentElement = e.target;
+          const index = parseInt(currentElement.getAttribute("data-index"), 10);
+
+          const prevIndex = index === 0 ? null : index  - 1;
+          const nextIndex = index === phrase.length - 1 ? null : index + 1;
+
+          const prevEl =
+            prevIndex !== null && document.querySelector(`[data-index="${prevIndex}"]`);
+
+          const nextEl =
+            nextIndex !== null && document.querySelector(`[data-index="${nextIndex}"]`);
+
+          e.target.classList.add("hovered");
+          prevEl && prevEl.classList.add("hovered-adjacent");
+          nextEl && nextEl.classList.add("hovered-adjacent");
+        });
+      });
+
+      document
+        .getElementById("bubble-hover")
+        .addEventListener("mouseleave", () => {
+          removeClasses();
+        });
+
+    </script>
+  </body>
+</html>
